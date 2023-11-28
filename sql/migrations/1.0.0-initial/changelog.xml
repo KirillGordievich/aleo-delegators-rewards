@@ -12,29 +12,20 @@
         <tagDatabase tag="v1.0.0"/>
     </changeSet>
 
-    <!-- Sanity checks -->
-    <preConditions onFail="HALT" onFailMessage="Must be running PostgreSQL >=10">
-        <and>
-            <dbms type="postgresql"/>
-            <sqlCheck expectedResult="t">
-                SELECT current_setting('server_version_num')::int > 100000;
-            </sqlCheck>
-        </and>
-    </preConditions>
-
-    <changeSet id="1.0.0-initial" author="kirillgordievich">
-        <!-- Schema, roles -->
-        <preConditions onFail="HALT" onFailMessage="Not all required roles have been created (check the README file)">
-          <changeLogPropertyDefined property="aleo_rewards_owner_role" />
-          <changeLogPropertyDefined property="aleo_rewards_app_role" />
-          <changeLogPropertyDefined property="aleo_rewards_app_user" />
-        </preConditions>
+    <!-- Roles -->
+    <changeSet id="1.0.0-initial-roles" author="kirillgordievich">
 
         <sqlFile path="0001_init.aleo_rewards.roles.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
+        <rollback>
+          <sqlFile path="rollback/0001_init.aleo_rewards.roles.rollback.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
+        </rollback>
+    </changeSet>
+
+    <!-- Schema -->
+    <changeSet id="1.0.0-initial-schema" author="kirillgordievich">
         <sqlFile path="0002_init.aleo_rewards.schema.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
         <rollback>
           <sqlFile path="rollback/0002_init.aleo_rewards.schema.rollback.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
-          <sqlFile path="rollback/0001_init.aleo_rewards.roles.rollback.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
         </rollback>
     </changeSet>
 

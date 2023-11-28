@@ -9,6 +9,6 @@
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!-- migrations -->
-    <include file="./migrations/1.0.0-initial/changelog.xml" relativeToChangelogFile="true"/>
+    <include file="./1.0.0-initial/changelog.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

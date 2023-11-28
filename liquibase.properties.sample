@@ -4,8 +4,9 @@ username: PUT_LIQUIABASE_USER_NAME_HERE
 password: PUT_LIQUIABASE_USER_PASSWORD_HERE
 changeLogFile: ./sql/changelog.xml
 
-parameter.aleo_rewards_owner_role: {aleo_rewards_owner_role}
-parameter.aleo_rewards_app_role: {aleo_rewards_app_role}
+parameter.aleo_rewards_owner_role: aleo_rewards_owner_role
+parameter.aleo_rewards_app_role: aleo_rewards_app_role
+parameter.aleo_rewards_app_user: aleo_rewards_app_user
 
 # exclude utils from default execution
 labels: !util
