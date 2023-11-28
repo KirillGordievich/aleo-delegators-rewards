@@ -1,0 +1,13 @@
+driver: org.postgresql.Driver
+url: jdbc:postgresql:PUT_DB_NAME_HERE
+username: PUT_LIQUIABASE_USER_NAME_HERE
+password: PUT_LIQUIABASE_USER_PASSWORD_HERE
+changeLogFile: ./sql/changelog.xml
+
+parameter.aleo_rewards_owner_role: {aleo_rewards_owner_role}
+parameter.aleo_rewards_app_role: {aleo_rewards_app_role}
+
+# exclude utils from default execution
+labels: !util
+
+liquibase.hub.mode=off
