@@ -19,21 +19,18 @@ class Transition:
     def __init__(self, id: str, program: str, function: str,
                  inputs: Optional[List[Input]] = None,
                  outputs: Optional[List[Output]] = None,
-                 proof: str = '', tpk: str = '', tcm: str = '', fee: int = 0):
+                 tpk: str = '', tcm: str = ''):
         self.id = id
         self.program = program
         self.function = function
         self.inputs = inputs or []
         self.outputs = outputs or []
-        self.proof = proof
         self.tpk = tpk
         self.tcm = tcm
-        self.fee = fee
 
 
 class Execution:
-    def __init__(self, edition: int, transitions: Optional[List[Transition]] = None):
-        self.edition = edition
+    def __init__(self, transitions: Optional[List[Transition]] = None):
         self.transitions = transitions or []
 
 
@@ -42,12 +39,13 @@ class TransactionModel:
         self.type = type
         self.id = id
         self.execution = execution
+        self.fee
 
 
 class ConfirmedTransaction:
-    def __init__(self, type: str, id: str, transaction: TransactionModel):
+    def __init__(self, status: str, type: str, transaction: TransactionModel):
+        self.status = status
         self.type = type
-        self.id = id
         self.transaction = transaction
 
 
@@ -70,10 +68,9 @@ class Header:
 
 
 class Block:
-    def __init__(self, block_hash: str, previous_hash: str, header: Header, signature: str,
+    def __init__(self, block_hash: str, previous_hash: str, header: Header,
                  transactions: Optional[List[ConfirmedTransaction]] = None):
         self.block_hash = block_hash
         self.previous_hash = previous_hash
         self.header = header
         self.transactions = transactions or []
-        self.signature = signature
