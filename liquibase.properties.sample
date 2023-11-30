@@ -1,5 +1,6 @@
 driver: org.postgresql.Driver
 url: jdbc:postgresql:PUT_DB_NAME_HERE
+# you can create aleo_rewards_liquibase_user (see README) or use your own user
 username: PUT_LIQUIABASE_USER_NAME_HERE
 password: PUT_LIQUIABASE_USER_PASSWORD_HERE
 changeLogFile: ./sql/changelog.xml

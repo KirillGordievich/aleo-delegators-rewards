@@ -29,6 +29,14 @@
         </rollback>
     </changeSet>
 
+    <!-- Entities -->
+    <changeSet id="1.0.0-initial-entities" author="kirillgordievich">
+        <sqlFile path="0003_init.aleo_rewards.entities.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
+        <rollback>
+          <sqlFile path="rollback/0003_init.aleo_rewards.entities.rollback.sql" relativeToChangelogFile="true" splitStatements="false" endDelimiter="" />
+        </rollback>
+    </changeSet>
+
     <changeSet id="v1.0.0:end" author="kirillgordievich">
         <tagDatabase tag="v1.0.0:END"/>
     </changeSet>
