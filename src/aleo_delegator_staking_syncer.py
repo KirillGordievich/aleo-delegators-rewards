@@ -4,9 +4,9 @@ from dto.block import Block
 
 
 class AleoDelegatorStakingSyncerClient:
-    def __init__(self, aleoClient: AleoNetworkApiClient, blockRangeSyncLimit=50, syncTimeout=1):
+    def __init__(self, aleoClient: AleoNetworkApiClient, blockRangeSyncLimit=50, syncTimeout=0.5):
         self.aleoClient = aleoClient
-        self.lastSyncedHeight = 7703
+        self.lastSyncedHeight = 0
         self.blockRangeSyncLimit = blockRangeSyncLimit
         self.syncTimeout = syncTimeout
 
