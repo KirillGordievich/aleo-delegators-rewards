@@ -21,7 +21,7 @@ class AleoDelegatorStakingSyncerClient:
 
         return [a.strip() for a in arguments.split(',')]
 
-    def handleStakeTransaction(self, transaction, action):
+    def saveStakeTransaction(self, transaction, action):
         outputs = transaction['transaction']['execution']['transitions'][0]['outputs']
         arguments = self.getFunctionArgumentsFromOutputs(outputs)
         validator = arguments[1]
@@ -30,29 +30,33 @@ class AleoDelegatorStakingSyncerClient:
 
         print(f'delegator {delegator} {action} {amount} to {validator}')
 
-    def handleTransaction(self, transaction):
+    def isStakeTransaction(self, transaction):
         # if not execute transaction than just skip
         if transaction['transaction']['type'] != 'execute':
-            return
+            return False
 
         is_credits_aleo = transaction['transaction']['execution']['transitions'][0]['program'] == 'credits.aleo'
         function = transaction['transaction']['execution']['transitions'][0]['function']
         is_stake_transaction = function in ['bond_public', 'unbond_public', 'claim_unbond_public']
 
-        if is_credits_aleo and is_stake_transaction:
-            if function == 'bond_public':
-                self.handleStakeTransaction(transaction, 'stake')
-            elif function == 'unbond_public':
-                self.handleStakeTransaction(transaction, 'unstake')
-            else:
-                self.handleStakeTransaction(transaction, 'claim unstake')
+        return is_credits_aleo and is_stake_transaction
 
+    def handleStakeTransaction(self, transaction):
+        function = transaction['transaction']['execution']['transitions'][0]['function']
+
+        if function == 'bond_public':
+            self.saveStakeTransaction(transaction, 'stake')
+        elif function == 'unbond_public':
+            self.saveStakeTransaction(transaction, 'unstake')
+        else:
+            self.saveStakeTransaction(transaction, 'claim unstake')
 
     def handleBlock(self, block: Block):
         transactions = block['transactions']
 
         for transaction in transactions:
-            self.handleTransaction(transaction)
+            if self.isStakeTransaction(transaction):
+                self.handleStakeTransaction(transaction)
 
     def startSync(self):
         while True:
