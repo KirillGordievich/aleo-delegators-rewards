@@ -31,3 +31,21 @@ $ liquibase update
 
 // rollback
 $ liquibase rollback v1.0.0
+```
+
+## App Requirements
+
+- python3
+- python3 libs:
+    - psycopg2
+    - json
+
+## App Setup
+```shell
+// open src\configs\db.py and fill actual credentials
+```
+
+## Aleo Network Syncer run
+```shell
+python src/index.py
+```
