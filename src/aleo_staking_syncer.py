@@ -7,7 +7,7 @@ class AleoStakingSyncerClient:
     def __init__(self, aleoClient: AleoNetworkApiClient, dbClient, blockRangeSyncLimit=50, iterationTimeout=0.05):
         self.aleo_client = aleoClient
         self.db_client = dbClient
-        self.last_synced_height = 7700
+        self.last_synced_height = None
         self.block_range_sync_limit = blockRangeSyncLimit
         self.iteration_timeout = iterationTimeout
 
