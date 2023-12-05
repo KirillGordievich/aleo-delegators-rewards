@@ -86,6 +86,7 @@ class AleoStakingSyncerClient:
 
     def start_sync(self):
         while True:
+            # TODO: before sync get the latest block height to ensure we are cannot get out the range
             start_height = self.get_last_synced_height()
             end_height = start_height + self.block_range_sync_limit
 
