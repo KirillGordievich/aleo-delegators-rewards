@@ -4,7 +4,7 @@ from dto.block import Block
 
 
 class AleoStakingSyncerClient:
-    def __init__(self, aleoClient: AleoNetworkApiClient, dbClient, blockRangeSyncLimit=50, iterationTimeout=0.05):
+    def __init__(self, aleoClient: AleoNetworkApiClient, dbClient, blockRangeSyncLimit=50, iterationTimeout=0):
         self.aleo_client = aleoClient
         self.db_client = dbClient
         self.last_synced_height = None
@@ -27,28 +27,35 @@ class AleoStakingSyncerClient:
 
         return [a.strip() for a in arguments.split(',')]
 
-    def save_stake_transaction(self, transaction, action, height, round):
+    def log_stake_transaction(self, transaction, height):
         outputs = transaction['transaction']['execution']['transitions'][0]['outputs']
         function = transaction['transaction']['execution']['transitions'][0]['function']
-
         arguments = self.get_arguments_from_outputs(outputs)
-        validator = arguments[1]
-        delegator = arguments[0]
-        amount = arguments[2].replace('u64', '')
 
+        if function == 'bond_public':
+            validator = arguments[1]
+            delegator = arguments[0]
+            amount = arguments[2].replace('u64', '')
+            print(f'delegator {delegator} stake {amount} to {validator} (block {height})')
+
+        elif function == 'unbond_public':
+            delegator = arguments[0]
+            amount = arguments[1].replace('u64', '')
+            print(f'delegator {delegator} unstake {amount} from validator (block {height})')
+        else:
+            delegator = arguments[0]
+            amount = arguments[1].replace('u64', '')
+            print(f'delegator {delegator} claim unstake {amount} from validator (block {height})')
+
+    def save_stake_transaction(self, transaction, height, round):
         transaction_db_format = {
-            'validator': validator,
-            'delegator': delegator,
-            'function': function,
+            'tx_id': transaction['transaction']['id'],
             'height': height,
             'round': round,
-            'amount': amount,
             'payload': transaction
         }
 
         self.db_client.save_stake_transaction(transaction_db_format)
-
-        print(f'delegator {delegator} {action} {amount} to {validator}')
 
     def is_stake_transaction(self, transaction):
         # if not execute transaction than just skip
@@ -65,14 +72,8 @@ class AleoStakingSyncerClient:
         return function in ['bond_public', 'unbond_public', 'claim_unbond_public']
 
     def handle_stake_transaction(self, transaction, block_height, block_round):
-        function = transaction['transaction']['execution']['transitions'][0]['function']
-
-        if function == 'bond_public':
-            self.save_stake_transaction(transaction, 'stake', block_height, block_round)
-        elif function == 'unbond_public':
-            self.save_stake_transaction(transaction, 'unstake', block_height, block_round)
-        else:
-            self.save_stake_transaction(transaction, 'claim unstake', block_height, block_round)
+        self.save_stake_transaction(transaction, block_height, block_round)
+        self.log_stake_transaction(transaction, block_height)
 
     def handle_block(self, block: Block):
         transactions = block['transactions']
