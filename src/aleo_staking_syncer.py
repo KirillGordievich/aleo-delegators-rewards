@@ -43,9 +43,9 @@ class AleoStakingSyncerClient:
             amount = arguments[1].replace('u64', '')
             print(f'delegator {delegator} unstake {amount} from validator (block {height})')
         else:
+            # claim_unbond_public
             delegator = arguments[0]
-            amount = arguments[1].replace('u64', '')
-            print(f'delegator {delegator} claim unstake {amount} from validator (block {height})')
+            print(f'delegator {delegator} claim unstake from validator (block {height})')
 
     def save_stake_transaction(self, transaction, height, round):
         transaction_db_format = {
